@@ -4,10 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -28,7 +26,4 @@ public class Restaurant {
 
     @Column(nullable = false)
     private int deliveryFee;
-
-    @CreatedDate
-    private LocalDateTime createdAt;
 }
