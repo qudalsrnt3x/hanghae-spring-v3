@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -22,7 +23,8 @@ public class restaurantApiController {
      * 음식점 등록
      */
     @PostMapping("/restaurant/register")
-    public ResponseEntity<Restaurant> registerRestaurant(@RequestBody RestaurantRegisterDto registerDto) {
+    public ResponseEntity<Restaurant> registerRestaurant(
+            @RequestBody @Valid RestaurantRegisterDto registerDto) {
 
         Restaurant restaurant = restaurantService.register(registerDto);
 
