@@ -4,7 +4,7 @@ import com.hanghae.hanghaespringv3.dto.RestaurantRegisterDto;
 import com.hanghae.hanghaespringv3.handler.exception.DeliveryFeeIsNot500UnitException;
 import com.hanghae.hanghaespringv3.handler.exception.MinOrderPriceIsNot100UnitException;
 import com.hanghae.hanghaespringv3.model.Restaurant;
-import com.hanghae.hanghaespringv3.model.RestaurantRepository;
+import com.hanghae.hanghaespringv3.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

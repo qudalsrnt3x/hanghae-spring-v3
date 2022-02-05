@@ -1,5 +1,6 @@
-package com.hanghae.hanghaespringv3.model;
+package com.hanghae.hanghaespringv3.repository;
 
+import com.hanghae.hanghaespringv3.model.Food;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
