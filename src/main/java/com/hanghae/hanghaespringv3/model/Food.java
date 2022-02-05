@@ -1,30 +1,30 @@
 package com.hanghae.hanghaespringv3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Entity
-public class Restaurant {
+public class Food {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private int minOrderPrice;
+    @Range(min = 100, max = 1000000, message = "가격은 100원 ~ 1000000원 사이만 입력할 수 있습니다.")
+    private int price;
 
-    @Column(nullable = false)
-    private int deliveryFee;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Restaurant restaurant;
 }

@@ -1,8 +1,6 @@
 package com.hanghae.hanghaespringv3.handler;
 
-import com.hanghae.hanghaespringv3.handler.exception.DeliveryFeeIsNot500UnitException;
-import com.hanghae.hanghaespringv3.handler.exception.ErrorResponse;
-import com.hanghae.hanghaespringv3.handler.exception.MinOrderPriceIsNot100UnitException;
+import com.hanghae.hanghaespringv3.handler.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,6 +28,27 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DeliveryFeeIsNot500UnitException.class)
     public ResponseEntity<ErrorResponse> handleDeliveryFeeIsNot500UnitException(
             DeliveryFeeIsNot500UnitException e) {
+        return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage())
+                , HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(
+            NotFoundException e) {
+        return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage())
+                , HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FoodNameDuplicateException.class)
+    public ResponseEntity<ErrorResponse> handleFoodNameDuplicateException(
+            FoodNameDuplicateException e) {
+        return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage())
+                , HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PriceIsNot100UnitException.class)
+    public ResponseEntity<ErrorResponse> handlePriceIsNot100UnitException(
+            PriceIsNot100UnitException e) {
         return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage())
                 , HttpStatus.BAD_REQUEST);
     }

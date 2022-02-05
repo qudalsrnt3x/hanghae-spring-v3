@@ -1,11 +1,7 @@
 package com.hanghae.hanghaespringv3.dto;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
-
-import javax.validation.constraints.Size;
 
 @Data
 public class RestaurantRegisterDto {
