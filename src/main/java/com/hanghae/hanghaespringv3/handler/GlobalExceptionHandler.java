@@ -52,4 +52,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage())
                 , HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(TotalPriceIsNotValidationException.class)
+    public ResponseEntity<ErrorResponse> handleTotalPriceIsNotValidation(
+            TotalPriceIsNotValidationException e) {
+        return new ResponseEntity<>(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage())
+                , HttpStatus.BAD_REQUEST);
+    }
 }

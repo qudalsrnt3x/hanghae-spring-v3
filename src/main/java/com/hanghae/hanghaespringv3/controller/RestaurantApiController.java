@@ -15,7 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-public class restaurantApiController {
+public class RestaurantApiController {
 
     private final RestaurantService restaurantService;
 
