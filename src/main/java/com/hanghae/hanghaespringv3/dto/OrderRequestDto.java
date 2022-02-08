@@ -13,4 +13,6 @@ public class OrderRequestDto {
 
     @Valid
     private List<FoodOrderRequestDto> foods;
+
+    private LocationDto locationDto;
 }

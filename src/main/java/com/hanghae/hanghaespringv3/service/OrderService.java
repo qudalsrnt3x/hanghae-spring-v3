@@ -1,9 +1,6 @@
 package com.hanghae.hanghaespringv3.service;
 
-import com.hanghae.hanghaespringv3.dto.FoodOrderRequestDto;
-import com.hanghae.hanghaespringv3.dto.FoodOrderResponse;
-import com.hanghae.hanghaespringv3.dto.OrderRequestDto;
-import com.hanghae.hanghaespringv3.dto.OrderResponse;
+import com.hanghae.hanghaespringv3.dto.*;
 import com.hanghae.hanghaespringv3.handler.exception.NotFoundException;
 import com.hanghae.hanghaespringv3.handler.exception.TotalPriceIsNotValidationException;
 import com.hanghae.hanghaespringv3.model.Food;
@@ -15,6 +12,7 @@ import com.hanghae.hanghaespringv3.repository.FoodRepository;
 import com.hanghae.hanghaespringv3.repository.OrderRepository;
 import com.hanghae.hanghaespringv3.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,23 +80,30 @@ public class OrderService {
         if (restaurantEntity.getMinOrderPrice() > totalPrice)
             throw new TotalPriceIsNotValidationException("주문 음식 가격의 합이 최소주문 가격보다 높아야 합니다.");
 
-        order.setTotalPrice(totalPrice + restaurantEntity.getDeliveryFee());
+        // 거리별 배달비 산정 후 총 배달비 구하기
+        int distanceFee = 0;
+        if (orderRequestDto.getLocationDto() != null)
+            distanceFee = getDistanceFee(orderRequestDto.getLocationDto(), restaurantEntity);
+        //System.out.println("distanceFee = " + distanceFee);
+
+        int totalDeliveryFee = restaurantEntity.getDeliveryFee() + distanceFee;
+
+        order.setTotalPrice(totalPrice + totalDeliveryFee);
 
         return OrderResponse.builder()
                 .restaurantName(restaurantEntity.getName())
                 .foods(foodOrderResponses)
                 .deliveryFee(restaurantEntity.getDeliveryFee())
-                .totalPrice(totalPrice+ restaurantEntity.getDeliveryFee())
+                .totalPrice(totalPrice+ totalDeliveryFee)
                 .build();
     }
+
 
     @Transactional(readOnly = true)
     public List<OrderResponse> getOrders() {
 
         List<OrderResponse> orderResponseList = new ArrayList<>();
         List<Order> orders = orderRepository.findAll();
-
-        int totalPrice = 0;
 
         for (Order order : orders) {
             Restaurant restaurant = order.getRestaurant();
@@ -135,5 +140,65 @@ public class OrderService {
         }
 
         return foodOrderResponses;
+    }
+
+
+    private int getDistanceFee(LocationDto locationDto, Restaurant restaurantEntity) {
+
+        List<Point> pointList = new ArrayList<>();
+
+        int distance = 3;
+        int distanceFee = 0;
+
+        // 배달 받을 주소 기준 1~3키로 내에 음식점이 있으면 해당 음식점과의 거리 산정 후 리턴
+        // 음식점의 좌표
+        Point restaurantLocation =
+                new Point(restaurantEntity.getX(), restaurantEntity.getY());
+
+        // 1키로 범위
+        getDistance(locationDto.getX(), locationDto.getY(), distance - 2, pointList);
+
+        if (pointList.contains(restaurantLocation)) {
+            distanceFee = 500;
+            return distanceFee;
+        }
+
+        // 2키로 범위
+        getDistance(locationDto.getX(), locationDto.getY(), distance - 1, pointList);
+
+        if (pointList.contains(restaurantLocation)) {
+            distanceFee = 1000;
+            return distanceFee;
+        }
+
+        // 3키로 범위
+        getDistance(locationDto.getX(), locationDto.getY(), distance, pointList);
+
+        if (pointList.contains(restaurantLocation)) {
+            distanceFee = 1500;
+            return distanceFee;
+        }
+
+        return distanceFee;
+    }
+
+
+    private void getDistance(int x, int y, int distance, List<Point> pointList) {
+
+        for (int i = 1; i <= distance; i++) {
+
+            // 1. 위에서 왼쪽으로
+            pointList.add(new Point(x - i, y - distance + i));
+
+            // 2. 왼쪽에서 아래쪽으로
+            pointList.add(new Point(x - distance + i, y + i));
+
+            // 3. 아래쪽에서 오른쪽으로
+            pointList.add(new Point(x + i, y + distance - i));
+
+            // 4. 오른쪽에서 윈쪽으로
+            pointList.add(new Point(x + distance - i, y - i));
+
+        }
     }
 }
