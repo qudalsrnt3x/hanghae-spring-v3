@@ -24,10 +24,9 @@ public class Order {
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<FoodOrder> foodOrderList;
 
+    @Setter
     private int totalPrice;
 
-    public void setTotalPrice(int totalPrice) {
-        this.totalPrice = totalPrice;
-    }
+
 
 }
