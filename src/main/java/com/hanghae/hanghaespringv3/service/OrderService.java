@@ -33,20 +33,23 @@ public class OrderService {
     @Transactional
     public OrderResponse createOrder(OrderRequestDto orderRequestDto) {
 
+        // 음식점 entity 가져오기
         Restaurant restaurantEntity = repository.findById(orderRequestDto.getRestaurantId()).orElseThrow(
                 () -> new NotFoundException("해당 레스토랑이 존재하지 않습니다.")
         );
 
+        // 주문 테이블에 음식점 entity 넣기
         Order order = Order.builder()
                 .restaurant(restaurantEntity)
                 .build();
 
+        // 저장
         orderRepository.save(order);
-
 
         List<FoodOrderResponse> foodOrderResponses = new ArrayList<>();
         int totalPrice = 0;
 
+        // 음식 주문 정보 리스트 돌면서
         for (FoodOrderRequestDto food : orderRequestDto.getFoods()) {
             Food findFood = foodRepository.findById(food.getId()).orElseThrow(
                     () -> new NotFoundException("해당하는 음식이 없습니다.")
@@ -61,8 +64,6 @@ public class OrderService {
 
             foodOrderRepository.save(foodOrder);
 
-            System.out.println("food.getQuantity() = " + food.getQuantity());
-            System.out.println("findFood.getPrice() = " + findFood.getPrice());
             // 주문 음식 가격 계산
             int price = food.getQuantity() * findFood.getPrice();
 
