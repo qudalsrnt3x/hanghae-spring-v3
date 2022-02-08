@@ -27,4 +27,9 @@ public class Restaurant {
 
     @Column(nullable = false)
     private int deliveryFee;
+
+    // 배달 주소 좌표
+    private int x;
+
+    private int y;
 }

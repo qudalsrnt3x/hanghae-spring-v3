@@ -1,5 +1,6 @@
 package com.hanghae.hanghaespringv3.controller;
 
+import com.hanghae.hanghaespringv3.dto.LocationDto;
 import com.hanghae.hanghaespringv3.dto.RestaurantRegisterDto;
 import com.hanghae.hanghaespringv3.model.Restaurant;
 import com.hanghae.hanghaespringv3.service.RestaurantService;
@@ -35,9 +36,9 @@ public class RestaurantApiController {
      * 음식점 조회
      */
     @GetMapping("/restaurants")
-    public ResponseEntity<List<Restaurant>> getRestaurants() {
+    public ResponseEntity<List<Restaurant>> getRestaurants(int x, int y) {
 
-        List<Restaurant> restaurants = restaurantService.getRestaurants();
+        List<Restaurant> restaurants = restaurantService.getRestaurants(x, y);
 
         return ResponseEntity.ok(restaurants);
     }

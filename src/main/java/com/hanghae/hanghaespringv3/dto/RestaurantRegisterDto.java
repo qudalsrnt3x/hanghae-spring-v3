@@ -3,6 +3,8 @@ package com.hanghae.hanghaespringv3.dto;
 import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 public class RestaurantRegisterDto {
 
@@ -13,4 +15,9 @@ public class RestaurantRegisterDto {
 
     @Range(max = 10000, message = "배달비는 0원 ~ 10000원 사이만 지정할 수 있습니다.")
     private int deliveryFee;
+
+    // 배달 주소 좌표 입력 (x, y)
+    private int x;
+
+    private int y;
 }
