@@ -1,5 +1,6 @@
 package com.hanghae.hanghaespringv3.service;
 
+import com.hanghae.hanghaespringv3.dto.LocationDto;
 import com.hanghae.hanghaespringv3.dto.RestaurantRegisterDto;
 import com.hanghae.hanghaespringv3.handler.exception.DeliveryFeeIsNot500UnitException;
 import com.hanghae.hanghaespringv3.handler.exception.MinOrderPriceIsNot100UnitException;
@@ -40,26 +41,29 @@ public class RestaurantService {
     }
 
     @Transactional(readOnly = true)
-    public List<Restaurant> getRestaurants(int x, int y) {
+    public List<Restaurant> getRestaurants(LocationDto locationDto) {
 
         List<Restaurant> restaurants = restaurantRepository.findAll();
 
         // "배달 받을 주소"에서 최대 3km 내에 있는 음식점들만 조회되어야 한다. (ex. [4,3])
         int distance = 3;
 
+        if (locationDto == null)
+            return restaurants;
+
         List<Point> pointList = new ArrayList<>();
 
         // 입력한 좌표 포함
-        pointList.add(new Point(x, y));
+        pointList.add(new Point(locationDto.getX(), locationDto.getY()));
 
         // 1키로 범위
-        getDistance(x, y, distance - 2, pointList);
+        getDistance(locationDto.getX(), locationDto.getY(), distance - 2, pointList);
 
         // 2키로 범위
-        getDistance(x, y, distance - 1, pointList);
+        getDistance(locationDto.getX(), locationDto.getY(), distance - 1, pointList);
 
         // 3키로 범위
-        getDistance(x, y, distance, pointList);
+        getDistance(locationDto.getX(), locationDto.getY(), distance, pointList);
 
         List<Restaurant> findRestaurants = new ArrayList<>();
 

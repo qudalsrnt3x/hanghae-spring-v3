@@ -36,9 +36,9 @@ public class RestaurantApiController {
      * 음식점 조회
      */
     @GetMapping("/restaurants")
-    public ResponseEntity<List<Restaurant>> getRestaurants(int x, int y) {
+    public ResponseEntity<List<Restaurant>> getRestaurants(LocationDto locationDto) {
 
-        List<Restaurant> restaurants = restaurantService.getRestaurants(x, y);
+        List<Restaurant> restaurants = restaurantService.getRestaurants(locationDto);
 
         return ResponseEntity.ok(restaurants);
     }
